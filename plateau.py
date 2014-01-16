@@ -41,22 +41,52 @@ t = [tr[i].tolist() for i in range(4147) if ((lb[i] in plateau_clusters))]
 bigt = [abs(getbiggesttransition(l[i],t[i])) for i in range(len(l))]
 bigtres = [abs(getbiggesttransition(lres[i],tres[i])) for i in range(len(lres))]
 
+sortindex = np.argsort(bigt)
+sortlcs = [l[i] for i in sortindex]
+sorttrans = [bigt[i] for i in sortindex]
+
+sortindexres = np.argsort(bigtres)
+sortlcsres = [lres[i] for i in sortindexres]
+sorttransres = [bigtres[i] for i in sortindexres]
+
 print len(lres)
 print len(l)
 
-plt.hist(bigt,bins=50,range=(0,3600),color=cm.Spectral(0.3),label='All Plateua Windows (N = 806)')
-plt.hist(bigtres,bins=50,range=(0,3600),color=cm.Spectral(0.6),label='Residential Plateua Windows (N = 401)')
+#plt.hist(bigt,bins=50,range=(0,3600),color=cm.Spectral(0.3),label='All Plateua Windows (N = 806)')
+#plt.hist(bigtres,bins=50,range=(0,3600),color=cm.Spectral(0.6),label='Residential Plateua Windows (N = 401)')
 
 hour = 360                                                                         
 htimes = [str(i%24).zfill(2) + ":00" for i in range(19,30)]                                                         
 ticks  = [hour*j for j in range(10+1)]
 
-plt.xticks(ticks, htimes, rotation=70)
-plt.xlim(0,3600)
-#plt.imshow(l,cmap='gray')
-#plt.scatter(bigt,range(len(bigt)))
-plt.legend()
-plt.suptitle('Distribution of Plateua Off Times')
-#plt.show()
-plt.savefig('plateua_offtimes.png', dpi=300)
+f, axarr = plt.subplots(2,1)
 
+axarr[0].imshow(sortlcsres,cmap='gray')
+axarr[0].set_xticks(ticks)
+axarr[0].set_xticklabels(htimes, rotation=70)
+axarr[0].scatter(sorttransres,range(len(sorttransres)),s=0.1,color='red',edgecolors='none')
+axarr[0].set_xlim([0,3600])
+axarr[0].set_ylim([0,len(sorttransres)])
+axarr[0].yaxis.set_visible(False)
+
+axarr[1].imshow(sortlcs,cmap='gray')
+axarr[1].set_xticks(ticks)
+axarr[1].set_xticklabels(htimes, rotation=70)
+axarr[1].scatter(sorttrans,range(len(sorttrans)),s=0.1,color='red',edgecolors='none')
+axarr[1].set_xlim([0,3600])
+axarr[1].set_ylim([0,len(sorttrans)])
+axarr[1].yaxis.set_visible(False)
+
+#plt.xticks(ticks, htimes, rotation=70)
+#plt.xlim(0,3600)
+#plt.ylim(0,len(bigtres))
+
+plt.savefig('../plots/plateua_imshow.png',dpi=300)
+
+#plt.imshow(sortlcsres,cmap='gray')
+#plt.scatter(sorttransres,range(len(bigtres)),s=0.1)
+#plt.legend()
+#plt.suptitle('Distribution of Plateua Off Times')
+#plt.show()
+#plt.savefig('../plots/plateua_offtimes.png', dpi=300)
+#plt.savefig('../plots/plateua_res_lightcurves_sorted.png', dpi=300)
